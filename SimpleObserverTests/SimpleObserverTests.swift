@@ -157,6 +157,17 @@ class SimpleObserverTests: XCTestCase {
             }
         }
     }
+
+    func test_デフォルトキューの設定() {
+        let hoge = Observing(false)
+
+        XCTAssertEqual(hoge.default_queue, dispatch_get_main_queue(), "")
+
+        let queue = dispatch_queue_create("", nil)
+        let fuga = Observing(false, queue: queue)
+
+        XCTAssertEqual(fuga.default_queue, queue, "")
+    }
     
     func test_Arrayを監視() {
         

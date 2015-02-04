@@ -23,8 +23,7 @@ final class Observer {
     }
 }
 
-
-public protocol ObservingProtocol {
+protocol ObservingProtocol {
     
     typealias Element
 }
@@ -52,14 +51,11 @@ public func ==<T> (lhs: Observable<T>, rhs: Observable<T>) -> Bool {
 public final class Observing<T: Equatable>: ObservingProtocol {
     
     typealias Element = T
-    
     typealias Event = (newValue: Element, oldValue: Element)
-    
     typealias Emitter = (Event) -> Void
-    
+
+    let default_queue: dispatch_queue_t
     lazy var observers: [Observer] = []
-    
-    var is_open: Bool = true
     
     public var value: Element {
         didSet {
@@ -69,12 +65,13 @@ public final class Observing<T: Equatable>: ObservingProtocol {
         }
     }
     
-    public init(_ value: Element) {
+    public init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
         self.value = value
+        self.default_queue = queue
     }
     
     public func watch<O: AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
-        self.watch(target, dispatch_get_main_queue(), emitter: emitter)
+        self.watch(target, self.default_queue, emitter: emitter)
     }
     
     public func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
@@ -119,11 +116,10 @@ public enum KeyValueChange<T> {
 public class ObservingArray<T>: ObservingProtocol {
     
     typealias Element = T
-    
     typealias Event = (newValue: [Element], oldValue: [Element], change: KeyValueChange<T>)
-    
     typealias Emitter = (Event) -> Void
-    
+
+    let default_queue: dispatch_queue_t
     lazy var observers: [Observer] = []
     
     var _values: [Element] = []
@@ -153,12 +149,13 @@ public class ObservingArray<T>: ObservingProtocol {
     
     
     
-    public init(_ values: [Element] = []) {
+    public init(_ values: [Element] = [], queue: dispatch_queue_t = dispatch_get_main_queue()) {
         self._values = values
+        self.default_queue = queue
     }
     
     public func watch<O: AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
-        self.watch(target, dispatch_get_main_queue(), emitter: emitter)
+        self.watch(target, self.default_queue, emitter: emitter)
     }
     
     public func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
