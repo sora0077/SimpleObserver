@@ -157,14 +157,14 @@ public class ObservingArray<T>: ObservingProtocol {
         self._values = values
     }
     
-    public func watch<O: AnyObject>(target: O, emitter: (Event, O) -> Void) {
+    public func watch<O: AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
         self.watch(target, dispatch_get_main_queue(), emitter: emitter)
     }
     
-    public func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (Event, O) -> Void) {
+    public func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
         
         let observer = Observer(owner: target, queue: queue) { [weak target] in
-            emitter(($0 as Event), target!)
+            emitter(event: ($0 as Event), observer: target!)
         }
         self.observers.append(observer)
     }
