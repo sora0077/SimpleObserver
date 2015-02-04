@@ -126,8 +126,6 @@ public class ObservingArray<T>: ObservingProtocol {
     
     lazy var observers: [Observer] = []
     
-    
-    
     var _values: [Element] = []
     public var values: [Element] {
         set {
@@ -155,7 +153,7 @@ public class ObservingArray<T>: ObservingProtocol {
     
     
     
-    init(_ values: [Element] = []) {
+    public init(_ values: [Element] = []) {
         self._values = values
     }
     
