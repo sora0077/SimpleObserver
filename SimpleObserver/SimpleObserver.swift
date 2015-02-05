@@ -81,6 +81,16 @@ public final class Observing<T: Equatable>: ObservingProtocol {
         }
         self.observers.append(observer)
     }
+
+    public func unwatch(target: AnyObject) {
+
+        for i in reverse(0..<self.observers.count) {
+            let v = self.observers[i]
+            if target === v.owner || v.owner == nil {
+                self.observers.removeAtIndex(i)
+            }
+        }
+    }
     
     private func trigger(e: Event) {
         
@@ -180,6 +190,16 @@ public class ObservingArray<T>: ObservingProtocol {
             emitter(event: ($0 as Event), observer: target!)
         }
         self.observers.append(observer)
+    }
+    
+    public func unwatch(target: AnyObject) {
+
+        for i in reverse(0..<self.observers.count) {
+            let v = self.observers[i]
+            if target === v.owner || v.owner == nil {
+                self.observers.removeAtIndex(i)
+            }
+        }
     }
     
     private func trigger(e: Event) {

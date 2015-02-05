@@ -118,5 +118,31 @@ class SimpleObserverArrayTests: XCTestCase {
         }
         
     }
-    
+
+    func test_unwatchされたら通知されない() {
+
+        var cnt = 0
+        let counter = { ++cnt }
+        let hoge = ObservingArray([1])
+        let expected = [2]
+        wait { done in
+
+            hoge.watch(self) { _ in
+                counter()
+                done()
+            }
+
+            dispatch_after(when(1), dispatch_get_main_queue()) {
+                done()
+            }
+
+            hoge.unwatch(self)
+
+            hoge.values = expected
+
+            return {
+                XCTAssertEqual(0, cnt, "")
+            }
+        }
+    }
 }
