@@ -350,7 +350,7 @@ class SimpleObserverTests: XCTestCase {
     }
     
     
-    func test_Observableに包み込んだオブジェクトが同一だったら通知されない() {
+    func test_Observableに包み込んだオブジェクトが同一でも通知される() {
         wait { done in
             var cnt = 0
             let counter = { ++cnt }
@@ -360,14 +360,14 @@ class SimpleObserverTests: XCTestCase {
             
             hoge.watch(self) { (e, _) in
                 counter()
-                XCTAssertFalse(true, "")
+                return
             }
             
             hoge.value = Observable(expected)
             done()
             
             return {
-                XCTAssertEqual(0, cnt, "")
+                XCTAssertEqual(1, cnt, "")
             }
         }
     }

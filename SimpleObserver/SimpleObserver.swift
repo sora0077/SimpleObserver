@@ -32,7 +32,7 @@ protocol ObservingProtocol {
 /**
 *  Equatableに適合できないオブジェクトをObserving対象に加えるためのラッパクラス
 */
-public final class Observable<T: AnyObject>: Equatable {
+public final class Observable<T>: Equatable {
     
     public let value: T
     
@@ -42,7 +42,7 @@ public final class Observable<T: AnyObject>: Equatable {
 }
 
 public func ==<T> (lhs: Observable<T>, rhs: Observable<T>) -> Bool {
-    return lhs.value === rhs.value
+    return false
 }
 
 /**
