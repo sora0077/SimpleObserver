@@ -8,7 +8,7 @@
 
 import UIKit
 import XCTest
-//import SimpleObserver
+import SimpleObserver
 
 
 let when = { sec in dispatch_time(DISPATCH_TIME_NOW, Int64(sec * Double(NSEC_PER_SEC))) }

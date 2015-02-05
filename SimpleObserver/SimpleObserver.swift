@@ -113,6 +113,22 @@ public enum KeyValueChange<T> {
     case Replacement(Box<T>, Int)
 }
 
+extension KeyValueChange: Printable {
+
+    public var description: String {
+        switch self {
+        case .Setting:
+            return "Setting"
+        case .Insertion:
+            return "Insertion"
+        case .Removal:
+            return"Removal"
+        case .Replacement:
+            return "Replacement"
+        }
+    }
+}
+
 public class ObservingArray<T>: ObservingProtocol {
     
     typealias Element = T
@@ -182,6 +198,19 @@ public class ObservingArray<T>: ObservingProtocol {
 }
 
 extension ObservingArray {
+
+    public subscript(idx: Int) -> Element {
+        get {
+            return self._values[idx]
+        }
+        set {
+            let oldValue = self._values
+            self._values[idx] = newValue
+
+            let e: Event = (newValue: self._values, oldValue: oldValue, change: .Replacement(Box(newValue), idx))
+            self.trigger(e)
+        }
+    }
     
     public func append(newElement: Element) {
         self.insert(newElement, atIndex: self.count)

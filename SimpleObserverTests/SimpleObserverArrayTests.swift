@@ -59,6 +59,34 @@ class SimpleObserverArrayTests: XCTestCase {
         }
         
     }
+
+    func test_Replace() {
+
+        wait { done in
+            var cnt = 0
+            let counter = { ++cnt }
+
+            let hoge = ObservingArray([1])
+
+            hoge.watch(self) { (e, _) in
+                switch e.change {
+                case let .Replacement(box, idx):
+                    XCTAssertEqual(box.unbox, 2, "")
+                    counter()
+                    done()
+                default:
+                    XCTAssertFalse(true, "error \(e.change)")
+                }
+            }
+
+            hoge[0] = 2
+
+            return {
+
+                XCTAssertEqual(1, cnt, "")
+            }
+        }
+    }
     
     func test_Arrayを丸ごと入れ替えた場合() {
         
