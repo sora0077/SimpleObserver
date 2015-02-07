@@ -32,7 +32,7 @@ protocol ObservingProtocol {
 /**
 *  Equatableに適合できないオブジェクトをObserving対象に加えるためのラッパクラス
 */
-public final class Observable<T>: Equatable {
+public final class UnsafeObservable<T>: Equatable {
     
     public let value: T
     
@@ -41,7 +41,7 @@ public final class Observable<T>: Equatable {
     }
 }
 
-public func ==<T> (lhs: Observable<T>, rhs: Observable<T>) -> Bool {
+public func ==<T> (lhs: UnsafeObservable<T>, rhs: UnsafeObservable<T>) -> Bool {
     return false
 }
 
@@ -285,4 +285,12 @@ extension ObservingArray {
 infix operator <= { associativity right }
 public func <= <T: Equatable>(lhs: Observing<T>, rhs: T) {
     lhs.value = rhs
+}
+
+public func <= <T: Equatable>(lhs: Observing<UnsafeObservable<T>>, rhs: T) {
+    lhs.value = UnsafeObservable(rhs)
+}
+
+public func <= <T: Equatable>(lhs: ObservingArray<T>, rhs: [T]) {
+    lhs.values = rhs
 }

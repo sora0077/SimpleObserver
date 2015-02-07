@@ -359,7 +359,7 @@ class SimpleObserverTests: XCTestCase {
             var cnt = 0
             let counter = { ++cnt }
             
-            let hoge = Observing(Observable(NotEquatable()))
+            let hoge = Observing(UnsafeObservable(NotEquatable()))
             
             hoge.watch(self) { (e, _) in
                 counter()
@@ -367,7 +367,7 @@ class SimpleObserverTests: XCTestCase {
                 done()
             }
             
-            hoge.value = Observable(NotEquatable(1))
+            hoge.value = UnsafeObservable(NotEquatable(1))
             
             return {
                 XCTAssertEqual(1, cnt, "")
@@ -382,14 +382,14 @@ class SimpleObserverTests: XCTestCase {
             let counter = { ++cnt }
             
             let expected = NotEquatable()
-            let hoge = Observing(Observable(expected))
+            let hoge = Observing(UnsafeObservable(expected))
             
             hoge.watch(self) { (e, _) in
                 counter()
                 return
             }
             
-            hoge.value = Observable(expected)
+            hoge.value = UnsafeObservable(expected)
             done()
             
             return {
