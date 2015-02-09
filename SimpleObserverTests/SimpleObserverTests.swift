@@ -15,11 +15,11 @@ let when = { sec in dispatch_time(DISPATCH_TIME_NOW, Int64(sec * Double(NSEC_PER
 extension XCTestCase {
     
     typealias DoneStatement = () -> Void
-    func wait(till num: Int = 1, _ block: (() -> Void) -> (() -> Void)) {
-        self.wait(till: num, message: "", timeout: 10, block)
+    func wait(till num: Int = 1, _ block: (() -> Void) -> (() -> Void), message: String = __FUNCTION__) {
+        self.wait(till: num, timeout: 10, block, message: message)
         
     }
-    func wait(till num: Int, message: String, timeout: NSTimeInterval, _ block: (() -> Void) -> (() -> Void)) {
+    func wait(till num: Int, timeout: NSTimeInterval, _ block: (() -> Void) -> (() -> Void), message: String = __FUNCTION__) {
         
         let expectation = self.expectationWithDescription(message)
         let queue = dispatch_queue_create("XCTestCase.wait", nil)
@@ -38,7 +38,10 @@ extension XCTestCase {
         
         completion = block(done)
         
-        self.waitForExpectationsWithTimeout(timeout) { (error) -> Void in }
+        self.waitForExpectationsWithTimeout(timeout) { (error) -> Void in
+            completion?()
+            return
+        }
     }
 }
 
@@ -352,7 +355,6 @@ class SimpleObserverTests: XCTestCase {
             }
         }
     }
-    
     
     func test_Observableに包み込めば監視出来る() {
         wait { done in
