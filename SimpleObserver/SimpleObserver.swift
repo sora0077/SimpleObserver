@@ -162,16 +162,16 @@ public class ObservingArray<T>: ObservingProtocol {
         }
     }
     
-    var count: Int { return self.values.count }
+    public var count: Int { return self.values.count }
     
     /// `true` if and only if the `Array` is empty
-    var isEmpty: Bool { return self.values.isEmpty }
+    public var isEmpty: Bool { return self.values.isEmpty }
     
     /// The first element, or `nil` if the array is empty
-    var first: T? { return self.values.first }
+    public var first: T? { return self.values.first }
     
     /// The last element, or `nil` if the array is empty
-    var last: T? { return self.values.last }
+    public var last: T? { return self.values.last }
     
     
     
