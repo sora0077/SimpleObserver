@@ -105,6 +105,19 @@ public final class Observing<T: Equatable>: UnsafeObserving<T> {
     }
 }
 
+public final class ObjectObserving<T: AnyObject>: UnsafeObserving<T> {
+
+    override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+        super.init(value, queue: queue)
+    }
+
+    private override func fire(oldValue: Element) {
+        if self.value !== oldValue {
+            self.trigger((newValue: self.value, oldValue: oldValue))
+        }
+    }
+}
+
 public final class Box<T> {
     
     public let unbox: T
