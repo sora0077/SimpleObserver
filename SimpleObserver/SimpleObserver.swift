@@ -28,54 +28,32 @@ protocol ObservingProtocol {
     typealias Element
 }
 
+public class UnsafeObserving<T>: ObservingProtocol {
 
-/**
-*  Equatableに適合できないオブジェクトをObserving対象に加えるためのラッパクラス
-*/
-public final class UnsafeObservable<T>: Equatable {
-    
-    public let value: T
-    
-    public init(_ v: T) {
-        self.value = v
-    }
-}
-
-public func ==<T> (lhs: UnsafeObservable<T>, rhs: UnsafeObservable<T>) -> Bool {
-    return false
-}
-
-/**
-*
-*/
-public final class Observing<T: Equatable>: ObservingProtocol {
-    
     typealias Element = T
     typealias Event = (newValue: Element, oldValue: Element)
     typealias Emitter = (Event) -> Void
 
     let default_queue: dispatch_queue_t
     lazy var observers: [Observer] = []
-    
+
     public var value: Element {
         didSet {
-            if self.value != oldValue {
-                self.trigger((newValue: self.value, oldValue: oldValue))
-            }
+            self.fire(oldValue)
         }
     }
-    
+
     public init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
         self.value = value
         self.default_queue = queue
     }
-    
+
     public func watch<O: AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
         self.watch(target, self.default_queue, emitter: emitter)
     }
-    
+
     public func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
-        
+
         let observer = Observer(owner: target, queue: queue) { [weak target] in
             emitter(event: ($0 as Event), observer: target!)
         }
@@ -91,9 +69,9 @@ public final class Observing<T: Equatable>: ObservingProtocol {
             }
         }
     }
-    
+
     private func trigger(e: Event) {
-        
+
         for i in reverse(0..<self.observers.count) {
             let o = self.observers[i]
             if let owner: AnyObject = o.owner {
@@ -103,6 +81,26 @@ public final class Observing<T: Equatable>: ObservingProtocol {
             } else {
                 self.observers.removeAtIndex(i)
             }
+        }
+    }
+
+    private func fire(oldValue: Element) {
+        self.trigger((newValue: self.value, oldValue: oldValue))
+    }
+}
+
+/**
+*
+*/
+public final class Observing<T: Equatable>: UnsafeObserving<T> {
+
+    override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+        super.init(value, queue: queue)
+    }
+
+    private override func fire(oldValue: Element) {
+        if self.value != oldValue {
+            self.trigger((newValue: self.value, oldValue: oldValue))
         }
     }
 }
@@ -283,14 +281,14 @@ extension ObservingArray {
 }
 
 infix operator <= { associativity right }
+public func <= <T>(lhs: UnsafeObserving<T>, rhs: T) {
+    lhs.value = rhs
+}
+
 public func <= <T: Equatable>(lhs: Observing<T>, rhs: T) {
     lhs.value = rhs
 }
 
-public func <= <T: Equatable>(lhs: Observing<UnsafeObservable<T>>, rhs: T) {
-    lhs.value = UnsafeObservable(rhs)
-}
-
-public func <= <T: Equatable>(lhs: ObservingArray<T>, rhs: [T]) {
+public func <= <T>(lhs: ObservingArray<T>, rhs: [T]) {
     lhs.values = rhs
 }

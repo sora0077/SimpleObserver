@@ -355,48 +355,4 @@ class SimpleObserverTests: XCTestCase {
             }
         }
     }
-    
-    func test_Observableに包み込めば監視出来る() {
-        wait { done in
-            var cnt = 0
-            let counter = { ++cnt }
-            
-            let hoge = Observing(UnsafeObservable(NotEquatable()))
-            
-            hoge.watch(self) { (e, _) in
-                counter()
-                XCTAssertEqual(1, e.newValue.value.val, "")
-                done()
-            }
-            
-            hoge.value = UnsafeObservable(NotEquatable(1))
-            
-            return {
-                XCTAssertEqual(1, cnt, "")
-            }
-        }
-    }
-    
-    
-    func test_Observableに包み込んだオブジェクトが同一でも通知される() {
-        wait { done in
-            var cnt = 0
-            let counter = { ++cnt }
-            
-            let expected = NotEquatable()
-            let hoge = Observing(UnsafeObservable(expected))
-            
-            hoge.watch(self) { (e, _) in
-                counter()
-                return
-            }
-            
-            hoge.value = UnsafeObservable(expected)
-            done()
-            
-            return {
-                XCTAssertEqual(1, cnt, "")
-            }
-        }
-    }
 }
