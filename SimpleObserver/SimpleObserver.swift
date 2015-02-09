@@ -94,7 +94,7 @@ public class UnsafeObserving<T>: ObservingProtocol {
 */
 public final class Observing<T: Equatable>: UnsafeObserving<T> {
 
-    override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+    public override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
         super.init(value, queue: queue)
     }
 
@@ -107,7 +107,7 @@ public final class Observing<T: Equatable>: UnsafeObserving<T> {
 
 public final class ObjectObserving<T: AnyObject>: UnsafeObserving<T> {
 
-    override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+    public override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
         super.init(value, queue: queue)
     }
 
