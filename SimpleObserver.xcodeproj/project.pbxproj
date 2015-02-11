@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D98ABE8D1A8B8C4A004C4F01 /* ObservingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98ABE8C1A8B8C4A004C4F01 /* ObservingTests.swift */; };
+		D98ABE8F1A8B969A004C4F01 /* OptionalObservingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98ABE8E1A8B969A004C4F01 /* OptionalObservingTests.swift */; };
 		D9EF62651A7B3D4900607BD7 /* SimpleObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EF62641A7B3D4900607BD7 /* SimpleObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9EF626B1A7B3D4900607BD7 /* SimpleObserver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EF625F1A7B3D4900607BD7 /* SimpleObserver.framework */; };
-		D9EF62721A7B3D4900607BD7 /* SimpleObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EF62711A7B3D4900607BD7 /* SimpleObserverTests.swift */; };
 		D9EF627C1A7B3D6300607BD7 /* SimpleObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EF627B1A7B3D6300607BD7 /* SimpleObserver.swift */; };
 		D9EF62851A7B582300607BD7 /* SimpleObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EF627B1A7B3D6300607BD7 /* SimpleObserver.swift */; };
-		D9FF78661A7F4CA00024C017 /* SimpleObserverArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FF78651A7F4CA00024C017 /* SimpleObserverArrayTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D98ABE8C1A8B8C4A004C4F01 /* ObservingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObservingTests.swift; sourceTree = "<group>"; };
+		D98ABE8E1A8B969A004C4F01 /* OptionalObservingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalObservingTests.swift; sourceTree = "<group>"; };
 		D9EF625F1A7B3D4900607BD7 /* SimpleObserver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SimpleObserver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9EF62631A7B3D4900607BD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9EF62641A7B3D4900607BD7 /* SimpleObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleObserver.h; sourceTree = "<group>"; };
@@ -97,6 +99,8 @@
 				D9EF62711A7B3D4900607BD7 /* SimpleObserverTests.swift */,
 				D9FF78651A7F4CA00024C017 /* SimpleObserverArrayTests.swift */,
 				D9EF626F1A7B3D4900607BD7 /* Supporting Files */,
+				D98ABE8C1A8B8C4A004C4F01 /* ObservingTests.swift */,
+				D98ABE8E1A8B969A004C4F01 /* OptionalObservingTests.swift */,
 			);
 			path = SimpleObserverTests;
 			sourceTree = "<group>";
@@ -170,6 +174,7 @@
 				TargetAttributes = {
 					D9EF625E1A7B3D4900607BD7 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = B2TD54U4MA;
 					};
 					D9EF62691A7B3D4900607BD7 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -224,9 +229,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9EF62721A7B3D4900607BD7 /* SimpleObserverTests.swift in Sources */,
 				D9EF62851A7B582300607BD7 /* SimpleObserver.swift in Sources */,
-				D9FF78661A7F4CA00024C017 /* SimpleObserverArrayTests.swift in Sources */,
+				D98ABE8F1A8B969A004C4F01 /* OptionalObservingTests.swift in Sources */,
+				D98ABE8D1A8B8C4A004C4F01 /* ObservingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
