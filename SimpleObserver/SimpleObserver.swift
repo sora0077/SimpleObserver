@@ -34,18 +34,26 @@ public class UnsafeObserving<T>: ObservingProtocol {
     typealias Event = (newValue: Element, oldValue: Element)
     typealias Emitter = (Event) -> Void
 
+    let equatable: (newValue: Element, oldValue: Element) -> Bool
     let default_queue: dispatch_queue_t
     lazy var observers: [Observer] = []
 
     public var value: Element {
         didSet {
-            self.fire(oldValue)
+            if !self.equatable(newValue: self.value, oldValue: oldValue) {
+                self.trigger((newValue: self.value, oldValue: oldValue))
+            }
         }
     }
 
-    public init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+    public init(_ value: Element, equatable: ((newValue: Element, oldValue: Element) -> Bool)? = nil, queue: dispatch_queue_t = dispatch_get_main_queue()) {
         self.value = value
         self.default_queue = queue
+        if let equatable = equatable {
+            self.equatable = equatable
+        } else {
+            self.equatable = { _ in true }
+        }
     }
 
     public func watch<O: AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
@@ -83,38 +91,29 @@ public class UnsafeObserving<T>: ObservingProtocol {
             }
         }
     }
-
-    private func fire(oldValue: Element) {
-        self.trigger((newValue: self.value, oldValue: oldValue))
-    }
 }
 
 /**
 *
 */
 public final class Observing<T: Equatable>: UnsafeObserving<T> {
-
-    public override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
-        super.init(value, queue: queue)
-    }
-
-    private override func fire(oldValue: Element) {
-        if self.value != oldValue {
-            self.trigger((newValue: self.value, oldValue: oldValue))
-        }
+    
+    public init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+        super.init(value, equatable: { vv in
+            vv.newValue == vv.oldValue
+            }, queue: queue)
     }
 }
 
+/**
+*
+*/
 public final class ObjectObserving<T: AnyObject>: UnsafeObserving<T> {
-
-    public override init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
-        super.init(value, queue: queue)
-    }
-
-    private override func fire(oldValue: Element) {
-        if self.value !== oldValue {
-            self.trigger((newValue: self.value, oldValue: oldValue))
-        }
+    
+    public init(_ value: Element, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+        super.init(value, equatable: { vv in
+            vv.newValue === vv.oldValue
+            }, queue: queue)
     }
 }
 
