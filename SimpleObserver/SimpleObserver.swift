@@ -41,8 +41,6 @@ public protocol ObservingProtocol {
     func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void)
     
     func unwatch(target: AnyObject)
-    
-    func setValue(value: ValueType)
 }
 
 
@@ -125,10 +123,6 @@ public final class Observing<T>: ObservingProtocol, ObservingProtocolPrivate {
         }
     }
     
-    public func setValue(value: ValueType) {
-        self.value = value
-    }
-    
     public init(_ value: ValueType, _ equatable: EquatableProvider, queue: dispatch_queue_t = dispatch_get_main_queue()) {
         
         self.value = value
@@ -187,10 +181,6 @@ public final class OptionalObserving<U>: ObservingProtocol, ObservingProtocolPri
         didSet {
             self.fire(self.value, oldValue: oldValue)
         }
-    }
-    
-    public func setValue(value: ValueType) {
-        self.value = value
     }
     
     public init(_ value: ValueType, _ equatable: EquatableProvider, queue: dispatch_queue_t = dispatch_get_main_queue()) {
@@ -455,8 +445,3 @@ extension KeyValueChange: Printable {
 //    }
 //}
 //
-infix operator <= { associativity right }
-public func <= <T: ObservingProtocol>(lhs: T, rhs: T.ValueType) {
-    lhs.setValue(rhs)
-}
-

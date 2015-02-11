@@ -195,7 +195,7 @@ class ObservingTests: XCTestCase {
                 done()
             }
             
-            hoge <= [2, 1]
+            hoge.value = [2, 1]
             
             return {
                 XCTAssertEqual(1, cnt, "")
@@ -218,7 +218,7 @@ class ObservingTests: XCTestCase {
                 done()
             }
             
-            hoge <= [Hoge(), Hoge()]
+            hoge.value = [Hoge(), Hoge()]
             
             return {
                 XCTAssertEqual(1, cnt, "")
@@ -240,7 +240,7 @@ class ObservingTests: XCTestCase {
                 XCTAssertEqual([expected], e.oldValue, "")
                 counter()
             }
-            hoge <= [expected]
+            hoge.value = [expected]
             
             done()
             
