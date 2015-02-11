@@ -40,9 +40,7 @@ public class UnsafeObserving<T>: ObservingProtocol {
 
     public var value: Element {
         didSet {
-            if !self.equatable(newValue: self.value, oldValue: oldValue) {
-                self.trigger((newValue: self.value, oldValue: oldValue))
-            }
+            self.fire(self.value, oldValue: oldValue)
         }
     }
 
@@ -91,6 +89,13 @@ public class UnsafeObserving<T>: ObservingProtocol {
             }
         }
     }
+    
+    private func fire(newValue: Element, oldValue: Element) {
+        
+        if !self.equatable(newValue: newValue, oldValue: oldValue) {
+            self.trigger((newValue: newValue, oldValue: oldValue))
+        }
+    }
 }
 
 /**
@@ -116,6 +121,50 @@ public final class ObjectObserving<T: AnyObject>: UnsafeObserving<T> {
             }, queue: queue)
     }
 }
+
+/**
+*
+*/
+public final class OptionalObserving<U>: UnsafeObserving<U?> {
+    
+    private let customEquatable: ((newValue: U, oldValue: U) -> Bool)?
+    
+    public override init(_ value: Element, equatable: ((newValue: Element, oldValue: Element) -> Bool)?, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+        super.init(value, equatable: equatable, queue: queue)
+    }
+    
+    public init(_ value: U, equatable: ((newValue: U, oldValue: U) -> Bool)? = nil, queue: dispatch_queue_t = dispatch_get_main_queue()) {
+        if let equatable = equatable {
+            self.customEquatable = equatable
+        } else {
+            self.customEquatable = { _ in true }
+        }
+        super.init(Optional(value), equatable: nil, queue: queue)
+    }
+    
+    private override func fire(newValue: Element, oldValue: Element) {
+        
+        switch (newValue, oldValue) {
+        case let (.Some(newValue), .Some(oldValue)):
+            if let custom = self.customEquatable {
+                if !custom(newValue: newValue, oldValue: oldValue) {
+                    self.trigger((newValue: Optional(newValue), oldValue: Optional(oldValue)))
+                }
+            } else {
+                if !self.equatable(newValue: newValue, oldValue: oldValue) {
+                    self.trigger((newValue: Optional(newValue), oldValue: Optional(oldValue)))
+                }
+            }
+        case (.Some, .None), (.None, .Some):
+            if !self.equatable(newValue: newValue, oldValue: oldValue) {
+                self.trigger((newValue: newValue, oldValue: oldValue))
+            }
+        case (.None, .None):
+            break
+        }
+    }
+}
+
 
 public final class Box<T> {
     

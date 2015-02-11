@@ -355,4 +355,26 @@ class SimpleObserverTests: XCTestCase {
             }
         }
     }
+    
+    func test_equatableに既存のfuncを設定する() {
+        
+        wait { done in
+            var cnt = 0
+            let counter = { ++cnt }
+            
+            let hoge = UnsafeObserving(false, equatable: ==)
+            
+            hoge.watch(self) { vv in
+                counter()
+                done()
+            }
+            
+            hoge.value = true
+            
+            return {
+                
+                XCTAssertEqual(cnt, 1, "")
+            }
+        }
+    }
 }
