@@ -236,7 +236,7 @@ public final class ObservingArray<T>: ObservingProtocol, ObservingProtocolPrivat
     
     public typealias ValueType = [T]
     public typealias Element = T
-    public typealias EquatableProvider = (newValue: ValueType, oldValue: ValueType) -> Bool
+    public typealias EquatableProvider = (newValue: Element, oldValue: Element) -> Bool
     public typealias Event = (newValue: ValueType, oldValue: ValueType, change: KeyValueChange<Element>)
     
     let equatable: EquatableProvider
@@ -320,11 +320,14 @@ extension ObservingArray {
             return self._value[idx]
         }
         set {
-            let oldValue = self._value
+            let oldValue = self._value[idx]
+            let oldValues = self._value
             self._value[idx] = newValue
-            
-            let e: Event = (newValue: self._value, oldValue: oldValue, change: .Replacement(Box(newValue), idx))
-            self.trigger(e)
+        
+            if !self.equatable(newValue: newValue, oldValue: oldValue) {
+                let e: Event = (newValue: self._value, oldValue: oldValues, change: .Replacement(Box(newValue), idx))
+                self.trigger(e)
+            }
         }
     }
     
