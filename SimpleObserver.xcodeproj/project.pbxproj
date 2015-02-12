@@ -35,9 +35,7 @@
 		D9EF62641A7B3D4900607BD7 /* SimpleObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleObserver.h; sourceTree = "<group>"; };
 		D9EF626A1A7B3D4900607BD7 /* SimpleObserverTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleObserverTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9EF62701A7B3D4900607BD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D9EF62711A7B3D4900607BD7 /* SimpleObserverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleObserverTests.swift; sourceTree = "<group>"; };
 		D9EF627B1A7B3D6300607BD7 /* SimpleObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleObserver.swift; sourceTree = "<group>"; };
-		D9FF78651A7F4CA00024C017 /* SimpleObserverArrayTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleObserverArrayTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,8 +96,6 @@
 		D9EF626E1A7B3D4900607BD7 /* SimpleObserverTests */ = {
 			isa = PBXGroup;
 			children = (
-				D9EF62711A7B3D4900607BD7 /* SimpleObserverTests.swift */,
-				D9FF78651A7F4CA00024C017 /* SimpleObserverArrayTests.swift */,
 				D9EF626F1A7B3D4900607BD7 /* Supporting Files */,
 				D98ABE8C1A8B8C4A004C4F01 /* ObservingTests.swift */,
 				D98ABE8E1A8B969A004C4F01 /* OptionalObservingTests.swift */,
