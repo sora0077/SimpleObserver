@@ -41,6 +41,8 @@ public protocol ObservingProtocol {
     func watch<O: AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void)
     
     func unwatch(target: AnyObject)
+    
+    func equals(rhs: Element) -> Bool
 }
 
 
@@ -145,6 +147,10 @@ public final class Observing<T>: ObservingProtocol, ObservingProtocolPrivate {
         ObservingUnwatch(self, target)
     }
     
+    public func equals(rhs: Element) -> Bool {
+        return self.equatable(newValue: rhs, oldValue: self.value)
+    }
+    
     func trigger(e: Event) {
         
         ObservingTrigger(self, e)
@@ -202,6 +208,14 @@ public final class OptionalObserving<U>: ObservingProtocol, ObservingProtocolPri
     public func unwatch(target: AnyObject) {
         
         ObservingUnwatch(self, target)
+    }
+    
+    public func equals(rhs: Element) -> Bool {
+
+        if let oldValue = self.value {
+            return self.equatable(newValue: rhs, oldValue: oldValue)
+        }
+        return false
     }
     
     func trigger(e: Event) {
@@ -277,6 +291,11 @@ public final class ObservingArray<T>: ObservingProtocol, ObservingProtocolPrivat
     public func unwatch(target: AnyObject) {
         
         ObservingUnwatch(self, target)
+    }
+    
+    public func equals(rhs: Element) -> Bool {
+        //NOTE: ObservingArray.equals is not work
+        return false
     }
     
     func trigger(e: Event) {
