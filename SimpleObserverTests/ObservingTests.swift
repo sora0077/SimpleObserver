@@ -13,11 +13,11 @@ let when = { sec in dispatch_time(DISPATCH_TIME_NOW, Int64(sec * Double(NSEC_PER
 extension XCTestCase {
     
     typealias DoneStatement = () -> Void
-    func wait(till num: Int = 1, _ block: (() -> Void) -> (() -> Void), message: String = __FUNCTION__) {
-        self.wait(till: num, timeout: 1, block, message: message)
+    func wait(till num: Int = 1, message: String = __FUNCTION__, _ block: (() -> Void) -> (() -> Void)) {
+        self.wait(till: num, message: message, timeout: 1, block)
         
     }
-    func wait(till num: Int, timeout: NSTimeInterval, _ block: (() -> Void) -> (() -> Void), message: String = __FUNCTION__) {
+    func wait(till num: Int, message: String = __FUNCTION__, timeout: NSTimeInterval, _ block: (() -> Void) -> (() -> Void)) {
         
         let expectation = self.expectationWithDescription(message)
         let queue = dispatch_queue_create("XCTestCase.wait", nil)
@@ -213,7 +213,7 @@ class ObservingTests: XCTestCase {
         wait { done in
             
             hoge.watch(self) { (e, _) in
-                XCTAssertEqual(0, (e.newValue[0] as Hoge).id, "")
+                XCTAssertEqual(0, (e.newValue[0] as! Hoge).id, "")
                 counter()
                 done()
             }
