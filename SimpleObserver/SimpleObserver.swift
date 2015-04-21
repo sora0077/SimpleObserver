@@ -66,7 +66,7 @@ private func ObservingWatch<T: ObservingProtocolPrivate, O : AnyObject>(observin
     
     let observer = Observer(owner: target, queue: queue) { [weak target] in
         if let target = target {
-            emitter(event: ($0 as T.Event), observer: target)
+            emitter(event: ($0 as! T.Event), observer: target)
         }
     }
     
