@@ -8,6 +8,7 @@
 
 import UIKit
 import XCTest
+@testable import SimpleObserver
 
 let when = { sec in dispatch_time(DISPATCH_TIME_NOW, Int64(sec * Double(NSEC_PER_SEC))) }
 extension XCTestCase {
@@ -146,12 +147,12 @@ class ObservingTests: XCTestCase {
     func test_デフォルトキューの設定() {
         let hoge = Observing(false, ==)
         
-        XCTAssertEqual(hoge.default_queue, dispatch_get_main_queue(), "")
+        XCTAssertTrue(hoge.default_queue === dispatch_get_main_queue(), "")
         
         let queue = dispatch_queue_create("", nil)
         let fuga = Observing(false, ==, queue: queue)
         
-        XCTAssertEqual(fuga.default_queue, queue, "")
+        XCTAssertTrue(fuga.default_queue === queue, "")
     }
     
     func test_unwatchされたら通知されない() {

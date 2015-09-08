@@ -75,7 +75,7 @@ private func ObservingWatch<T: ObservingProtocolPrivate, O : AnyObject>(observin
 
 private func ObservingUnwatch<T: ObservingProtocolPrivate>(observing: T, target: AnyObject) {
     
-    for i in reverse(0..<observing.observers.count) {
+    for i in Array((0..<observing.observers.count).reverse()) {
         let v = observing.observers[i]
         if target === v.owner || v.owner == nil {
             observing.removeObserverAtIndex(i)
@@ -85,9 +85,9 @@ private func ObservingUnwatch<T: ObservingProtocolPrivate>(observing: T, target:
 
 private func ObservingTrigger<T: ObservingProtocolPrivate>(observing: T, event: T.Event) {
     
-    for i in reverse(0..<observing.observers.count) {
+    for i in Array((0..<observing.observers.count).reverse()) {
         let o = observing.observers[i]
-        if let owner: AnyObject = o.owner {
+        if let _: AnyObject = o.owner {
             dispatch_async(o.queue) {
                 o.emitter(event)
             }
@@ -134,17 +134,17 @@ public final class Observing<T>: ObservingProtocol, ObservingProtocolPrivate {
     
     public func watch<O : AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
         
-        ObservingWatch(self, target, self.default_queue, emitter)
+        ObservingWatch(self, target: target, queue: self.default_queue, emitter: emitter)
     }
     
     public func watch<O : AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
         
-        ObservingWatch(self, target, queue, emitter)
+        ObservingWatch(self, target: target, queue: queue, emitter: emitter)
     }
     
     public func unwatch(target: AnyObject) {
         
-        ObservingUnwatch(self, target)
+        ObservingUnwatch(self, target: target)
     }
     
     public func equals(rhs: Element) -> Bool {
@@ -153,7 +153,7 @@ public final class Observing<T>: ObservingProtocol, ObservingProtocolPrivate {
     
     func trigger(e: Event) {
         
-        ObservingTrigger(self, e)
+        ObservingTrigger(self, event: e)
     }
     
     private func appendObserver(observer: Observer) {
@@ -167,7 +167,7 @@ public final class Observing<T>: ObservingProtocol, ObservingProtocolPrivate {
     private func fire(newValue: ValueType, oldValue: ValueType) {
         
         if !self.equatable(newValue: newValue, oldValue: oldValue) {
-            ObservingTrigger(self, (newValue: newValue, oldValue: oldValue))
+            ObservingTrigger(self, event: (newValue: newValue, oldValue: oldValue))
         }
     }
 }
@@ -197,17 +197,17 @@ public final class OptionalObserving<U>: ObservingProtocol, ObservingProtocolPri
     }
     public func watch<O : AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
         
-        ObservingWatch(self, target, self.default_queue, emitter)
+        ObservingWatch(self, target: target, queue: self.default_queue, emitter: emitter)
     }
     
     public func watch<O : AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
         
-        ObservingWatch(self, target, queue, emitter)
+        ObservingWatch(self, target: target, queue: queue, emitter: emitter)
     }
     
     public func unwatch(target: AnyObject) {
         
-        ObservingUnwatch(self, target)
+        ObservingUnwatch(self, target: target)
     }
     
     public func equals(rhs: Element) -> Bool {
@@ -220,7 +220,7 @@ public final class OptionalObserving<U>: ObservingProtocol, ObservingProtocolPri
     
     func trigger(e: Event) {
         
-        ObservingTrigger(self, e)
+        ObservingTrigger(self, event: e)
     }
     
     private func appendObserver(observer: Observer) {
@@ -236,10 +236,10 @@ public final class OptionalObserving<U>: ObservingProtocol, ObservingProtocolPri
         switch (newValue, oldValue) {
         case let (.Some(newValue), .Some(oldValue)):
             if !self.equatable(newValue: newValue, oldValue: oldValue) {
-                ObservingTrigger(self, (newValue: newValue, oldValue: oldValue))
+                ObservingTrigger(self, event: (newValue: newValue, oldValue: oldValue))
             }
         case (.Some, .None), (.None, .Some):
-            ObservingTrigger(self, (newValue: newValue, oldValue: oldValue))
+            ObservingTrigger(self, event: (newValue: newValue, oldValue: oldValue))
         case (.None, .None):
             break
         }
@@ -265,7 +265,7 @@ public final class ObservingArray<T>: ObservingProtocol, ObservingProtocolPrivat
             self._value = newValue
             
             let e: Event = (newValue: newValue, oldValue: oldValue, change: .Setting)
-            ObservingTrigger(self, e)
+            ObservingTrigger(self, event: e)
         }
         get {
             return self._value
@@ -280,17 +280,17 @@ public final class ObservingArray<T>: ObservingProtocol, ObservingProtocolPrivat
     }
     public func watch<O : AnyObject>(target: O, emitter: (event: Event, observer: O) -> Void) {
         
-        ObservingWatch(self, target, self.default_queue, emitter)
+        ObservingWatch(self, target: target, queue: self.default_queue, emitter: emitter)
     }
     
     public func watch<O : AnyObject>(target: O, _ queue: dispatch_queue_t, emitter: (event: Event, observer: O) -> Void) {
         
-        ObservingWatch(self, target, queue, emitter)
+        ObservingWatch(self, target: target, queue: queue, emitter: emitter)
     }
     
     public func unwatch(target: AnyObject) {
         
-        ObservingUnwatch(self, target)
+        ObservingUnwatch(self, target: target)
     }
     
     public func equals(rhs: Element) -> Bool {
@@ -300,7 +300,7 @@ public final class ObservingArray<T>: ObservingProtocol, ObservingProtocolPrivat
     
     func trigger(e: Event) {
         
-        ObservingTrigger(self, e)
+        ObservingTrigger(self, event: e)
     }
     
     private func appendObserver(observer: Observer) {
@@ -364,7 +364,7 @@ extension ObservingArray {
     }
     
     public func extend(newElements: [Element]) {
-        for (idx, v) in enumerate(newElements) {
+        for (idx, v) in newElements.enumerate() {
             self.insert(v, atIndex: idx)
         }
     }
@@ -387,7 +387,7 @@ extension ObservingArray {
     
     public func removeAll() {
         
-        for _ in reverse(self._value) {
+        for _ in Array(self._value.reverse()) {
             self.removeLast()
         }
     }
@@ -410,7 +410,7 @@ public enum KeyValueChange<T> {
     case Replacement(Box<T>, Int)
 }
 
-extension KeyValueChange: Printable {
+extension KeyValueChange: CustomStringConvertible {
 
     public var description: String {
         switch self {
